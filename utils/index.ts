@@ -1,4 +1,5 @@
-import { readFileSync } from 'fs';
+import { createReadStream , readFileSync } from 'fs';
+import { createInterface } from 'node:readline/promises';
 import path from 'path';
 
 export function shouldRunDemo() {
@@ -28,4 +29,16 @@ export function loadInput(executionCtx: string): string {
   const inputPath = getInputPath(executionCtx);
 
   return readFileSync(inputPath, { encoding: 'utf-8' });
+}
+
+/**
+ * @param executionCtx - @see getInputPath
+ */
+export function getInputLineReader(executionCtx: string) {
+  const reader = createInterface({
+    input: createReadStream(getInputPath(executionCtx)),
+    crlfDelay: Infinity,
+  });
+
+  return reader;
 }
