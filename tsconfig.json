@@ -3,9 +3,6 @@
     "target": "ES2020",
     "module": "commonjs",
     "rootDir": "./",
-    "paths": {
-      "@advent-of-code/*": ["./"]
-    },
     "sourceMap": true,
     "outDir": "./dist",
     "removeComments": true,
@@ -37,5 +34,5 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+  },
 }

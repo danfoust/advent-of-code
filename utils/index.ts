@@ -1,9 +1,13 @@
+import path from 'path';
 import { createReadStream , readFileSync } from 'fs';
 import { createInterface } from 'node:readline/promises';
-import path from 'path';
 
 export function shouldRunDemo() {
   return process.argv.some(arg => arg.trim() === '--demo');
+}
+
+export function shouldUseStdIn() {
+  return process.argv.some(arg => arg.trim() === '--stdin');
 }
 
 /**
@@ -35,10 +39,8 @@ export function loadInput(executionCtx: string): string {
  * @param executionCtx - @see getInputPath
  */
 export function getInputLineReader(executionCtx: string) {
-  const reader = createInterface({
-    input: createReadStream(getInputPath(executionCtx)),
-    crlfDelay: Infinity,
-  });
+  const input = shouldUseStdIn() ? process.stdin : createReadStream(getInputPath(executionCtx));
+  const reader = createInterface({ input, crlfDelay: Infinity });
 
   return reader;
 }
