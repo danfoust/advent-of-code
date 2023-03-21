@@ -1,5 +1,7 @@
 import { getInputLineReader } from '../../utils';
 
+type Coord = [number, number];
+
 const Stepper: Record<string, Function> = {
   '^': (coord: [number, number]) => [coord[0], coord[1] + 1],
   '>': (coord: [number, number]) => [coord[0] + 1, coord[1]],
@@ -10,19 +12,31 @@ const Stepper: Record<string, Function> = {
 void (async () =>{
   const reader = getInputLineReader(__dirname);
 
-  let currentPosition = [0, 0];
+  const startingPosition: Coord = [0, 0];
+  const santas: Record<string, Coord> = {
+    // The true santa
+    true: startingPosition,
+    // The false (robo) santa
+    false: startingPosition,
+  };
+
   let visitedCoords = new Set();
-  visitedCoords.add(currentPosition.join(''));
+  visitedCoords.add(startingPosition.join(''));
+
+  let isSantasTurn = true;
 
   for await (const line of reader) {
     const steps = line.split('');
 
     for (const step of steps) {
       // Travel
-      currentPosition = Stepper[step](currentPosition);
+      santas[`${isSantasTurn}`] = Stepper[step](santas[`${isSantasTurn}`]);
 
       // Update visited coordinates
-      visitedCoords.add(currentPosition.join(''));
+      visitedCoords.add(santas[`${isSantasTurn}`].join(''));
+
+      // Toggle turn
+      isSantasTurn = !isSantasTurn;
     }
   }
 
